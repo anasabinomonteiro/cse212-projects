@@ -24,7 +24,33 @@
 
     private static int CountDuplicates(int[] data)
     {
-        // Add code here.
-        return 0;
+        // Create one Set to track all unique items
+        var numbersSeen = new HashSet<int>();
+
+        // Create a Counter for duplicates
+        int duplicateCount = 0;
+
+        // Iteration over each item in the data collection
+        foreach (int number in data)
+        {
+            // Try add the number to the set
+            // Add returns false if the item was already in the set
+            if (!numbersSeen.Add(number))
+            {
+                // Increment the duplicate counter
+                duplicateCount++;
+            }
+        }
+        return duplicateCount;
+    }
+
+    // <summary>
+    /// Add everything in the data to the set. Duplicates will be automatically ignored.
+    /// Subtract the length of the set from the length of the data.
+    /// </summary>
+    private static int CountDuplicatesAlternate(int[] data)
+    {
+        var unique = new HashSet<int>(data);
+        return data.Length - unique.Count;
     }
 }
