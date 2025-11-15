@@ -22,7 +22,36 @@ public static class SetsAndMaps
     public static string[] FindPairs(string[] words)
     {
         // TODO Problem 1 - ADD YOUR CODE HERE
-        return [];
+        // 1. One set to hold the words we have seen so far
+        var wordsSeen = new HashSet<string>();
+
+        // 2. One set to hold the pairs we have found
+        var results = new List<string>();
+
+        // 3. Iterate the List one time 
+        foreach (var word in words)
+        {
+            // Jump special case(eg."aa")
+            if (word[0] == word[1])
+            {
+                continue;
+            }
+            // 4. Inverse the word (eg. "am" -> "ma")
+            string reversedWord = word[1].ToString() + word[0].ToString();
+
+            // 5. Check if the inverse word is in the set of words seen
+            if (wordsSeen.Contains(reversedWord))
+            {
+                // If it is, add the pair to the results
+                results.Add($"{word} & {reversedWord}");
+            }
+            else
+            {
+                //If it is not, add the word to the set of words seen
+                wordsSeen.Add(word);
+            }
+        }
+        return results.ToArray();
     }
 
     /// <summary>
@@ -43,6 +72,20 @@ public static class SetsAndMaps
         {
             var fields = line.Split(",");
             // TODO Problem 2 - ADD YOUR CODE HERE
+            // 1. Get the degree from the 4th column, index 3 and clean spaces
+            string degree = fields[3].Trim();
+
+            // 2. If the degree is already in the dictionary, increment its count
+            if (degrees.ContainsKey(degree))
+            {
+                // 3. If yes, increment its count
+                degrees[degree]++;
+            }
+            else
+            {
+                // 4. If no, add it to the dictionary with a count of 1
+                degrees[degree] = 1;
+            }
         }
 
         return degrees;
@@ -67,7 +110,42 @@ public static class SetsAndMaps
     public static bool IsAnagram(string word1, string word2)
     {
         // TODO Problem 3 - ADD YOUR CODE HERE
-        return false;
+        // 1. Pre proccess : Ignore spaces and cases
+        string processedWord1 = word1.ToLower().Replace(" ", "");
+        string processedWord2 = word2.ToLower().Replace(" ", "");
+
+        // 2. Length check
+        if (processedWord1.Length != processedWord2.Length)
+        {
+            return false;
+        }
+
+        // 3. Count the frequency of each letter in word1
+        var letterCount = new Dictionary<char, int>();
+        foreach (char c in processedWord1)
+        {
+            // Try to obtain the count of the letter (pattern 0)
+            letterCount.TryGetValue(c, out int currentCount);
+
+            // Defines the new count
+            letterCount[c] = currentCount + 1;
+        }
+
+        // 4. Discount using the letters in word2
+        foreach (char c in processedWord2)
+        {
+            // Verify if the letter does not exist in the dictionary or the count is 0
+            if (!letterCount.ContainsKey(c) || letterCount[c] == 0)
+            {
+                // If yes, return false
+                return false;
+            }
+
+            // If no, decrement the count
+            letterCount[c]--;
+        }
+        // 5. If all letters matched, return true
+        return true;
     }
 
     /// <summary>
@@ -101,6 +179,38 @@ public static class SetsAndMaps
         // on those classes so that the call to Deserialize above works properly.
         // 2. Add code below to create a string out each place a earthquake has happened today and its magitude.
         // 3. Return an array of these string descriptions.
-        return [];
+        // Read json and fill the classes      
+
+        var descriptions = new List<string>();
+
+        // Verify if featureCollection or Features is null
+        if (featureCollection != null && featureCollection.Features != null)
+        {
+            // Iterate through each feature
+            foreach (var earthquake in featureCollection.Features)
+            {
+                // Security Verification : Igonore feature if Properties is null
+                if (earthquake.Properties != null && earthquake.Properties.Place != null)
+                {
+                    // Access place
+                    string place = earthquake.Properties.Place;
+
+                    // Access magnitude, if null, use "N/A"
+                    double? mag = earthquake.Properties.Mag;
+
+                    // Verify if mag has value, if not, use "N/A"
+                    string magDisplay = mag.HasValue ? mag.Value.ToString() : "N/A";
+
+                    // Format the description
+                    string formattedString = $"{place} - Mag {mag}";
+                    descriptions.Add(formattedString);
+                }
+            }
+        }
+        return descriptions.ToArray();
     }
 }
+
+
+
+

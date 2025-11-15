@@ -33,6 +33,18 @@ public class Maze
     public void MoveLeft()
     {
         // FILL IN CODE
+        // 1. Get valid moviments for the actually location
+        var validMoviments = _mazeMap[(_currX, _currY)];
+
+        // 2. Verify if can move to left
+        if (validMoviments[0]) // if true
+        {
+            _currX--; // move to left (decrease X)
+        }
+        else // if false
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
@@ -42,6 +54,18 @@ public class Maze
     public void MoveRight()
     {
         // FILL IN CODE
+        // 1. Get valid moviments for the actually location
+        var validMoviments = _mazeMap[(_currX, _currY)];
+
+        // 2. Verify if can move to right
+        if (validMoviments[1]) // if true
+        {
+            _currX++; // move to right(increase X)
+        }
+        else // if false (wall)
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
@@ -51,6 +75,18 @@ public class Maze
     public void MoveUp()
     {
         // FILL IN CODE
+        // 1. Get valid moviments for the actually location
+        var validMoviments = _mazeMap[(_currX, _currY)];
+
+        // 2. Verify if can move to up (index 2)
+        if (validMoviments[2]) // if true
+        {
+            _currY--; // move to up (decrease Y)
+        }
+        else // if false (wall)
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
     }
 
     /// <summary>
@@ -60,8 +96,19 @@ public class Maze
     public void MoveDown()
     {
         // FILL IN CODE
-    }
+        // 1. Get valid moviments for the actually location
+        var validMoviments = _mazeMap[(_currX, _currY)];
 
+        // 2. Verify if can move to down (index 3)
+        if (validMoviments[3]) // if true
+        {
+            _currY++; // move to down (increase Y)
+        }
+        else // if false (wall)
+        {
+            throw new InvalidOperationException("Can't go that way!");
+        }
+    }
     public string GetStatus()
     {
         return $"Current location (x={_currX}, y={_currY})";
